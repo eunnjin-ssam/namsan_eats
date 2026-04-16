@@ -95,7 +95,11 @@
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center space-x-3">
         <i class="fas fa-motorcycle text-blue-500 text-2xl"></i>
-        <h1 class="text-2xl font-bold text-gray-800"><span class="text-blue-500">온기가득</span> 남산 이츠</h1>
+        <h1 class="text-2xl font-bold">
+          <span style="color:#935227">온기가득</span>
+          <span style="color:#f6552f">nam</span><span style="color:#ffb700">san</span>
+          <span style="color:#88cc2f">eats</span>
+        </h1>
       </div>
       <nav class="flex space-x-3">
         <button onclick="showDashboard()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
@@ -294,6 +298,9 @@
         </div>`;
     });
 
+    // ② 메뉴 등록 중 플래그 (onSnapshot이 화면 전환하지 않도록)
+    let isSubmitting = false;
+
     // 메뉴 등록
     window.handleMenuSubmit = async function(e) {
       e.preventDefault();
@@ -302,6 +309,7 @@
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>등록 중...';
+      isSubmitting = true;
       try {
         await addDoc(collection(db, 'menus'), {
           chef_name:   document.getElementById('chef-name').value,
@@ -314,27 +322,27 @@
         });
         window.playNotificationSound();
         window.showNotification('메뉴가 등록되었습니다! 🎉');
-        document.getElementById('menu-form').reset();
-        document.getElementById('selected-image').value = '';
-        document.getElementById('selected-image-preview').textContent = '없음 (선택해주세요)';
-        document.querySelectorAll('.food-image-option').forEach(o => o.classList.remove('selected'));
-        showDashboard();
+        showDashboard(); // 폼 초기화는 showMenuRegistration에서 처리
       } catch (err) {
         console.error(err);
         alert('등록 실패! Firebase 설정을 확인해주세요.\n\n오류: ' + err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>메뉴 등록하기';
+        isSubmitting = false;
       }
     };
 
-    // 리뷰 등록
+    // ④ 리뷰 등록 - 버튼 비활성화로 중복 방지 및 완료 후 모달 닫기
     window.handleReviewSubmit = async function(e) {
       e.preventDefault();
       if (!window._selectedRating) { alert('별점을 선택해주세요!'); return; }
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '등록 중...'; }
       try {
+        const menuId = document.getElementById('review-menu-id').value;
         await addDoc(collection(db, 'reviews'), {
-          menu_id:       document.getElementById('review-menu-id').value,
+          menu_id:       menuId,
           reviewer_name: document.getElementById('reviewer-name').value.trim() || '익명',
           rating:        window._selectedRating,
           content:       document.getElementById('review-content').value,
@@ -343,10 +351,34 @@
         window.playNotificationSound();
         window.showNotification('리뷰가 등록되었습니다!');
         closeReviewModal();
+        // ⑤ 해당 메뉴의 리뷰 개수 업데이트
+        updateReviewCount(db, menuId);
       } catch (err) {
         alert('리뷰 등록 실패: ' + err.message);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '등록'; }
       }
     };
+
+    // ⑤ 리뷰 개수 실시간 업데이트
+    async function updateReviewCount(db, menuId) {
+      try {
+        const q = query(collection(db, 'reviews'), where('menu_id','==',menuId));
+        const snap = await getDocs(q);
+        const el = document.getElementById(`review-count-${menuId}`);
+        if (el) el.textContent = snap.size;
+      } catch(e) {}
+    }
+
+    // ⑤ 페이지 로드 시 모든 메뉴의 리뷰 개수 일괄 로드
+    async function loadAllReviewCounts(db, menuIds) {
+      for (const menuId of menuIds) {
+        updateReviewCount(db, menuId);
+      }
+    }
+
+    // displayMenus에서 호출할 수 있도록 전역 등록
+    window._loadAllReviewCounts = (menuIds) => loadAllReviewCounts(db, menuIds);
 
     // 리뷰 목록
     window.openReviewsModal = async function(menuId, menuName) {
@@ -406,7 +438,7 @@
           <div class="flex flex-wrap gap-1 mb-4">
             ${m.ingredients ? m.ingredients.split(' ').map(i=>`<span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">${i}</span>`).join('') : ''}
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 items-center">
             <button onclick="openReviewModal('${m.id}','${m.menu_name.replace(/'/g,"\\'")}')"
                     class="flex items-center gap-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
               <i class="fas fa-star"></i> 리뷰 쓰기
@@ -414,10 +446,16 @@
             <button onclick="openReviewsModal('${m.id}','${m.menu_name.replace(/'/g,"\\'")}')"
                     class="flex items-center gap-1 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm">
               <i class="fas fa-comment-dots"></i> 리뷰 보기
+              <span id="review-count-${m.id}" class="bg-indigo-400 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">-</span>
             </button>
           </div>
         </div>
       </div>`).join('');
+
+    // ⑤ 카드 렌더 후 리뷰 개수 로드
+    if (window._loadAllReviewCounts) {
+      window._loadAllReviewCounts(menus.map(m => m.id));
+    }
   };
 </script>
 
@@ -467,6 +505,11 @@
   function showMenuRegistration() {
     document.getElementById('dashboard-section').classList.add('hidden');
     document.getElementById('registration-section').classList.remove('hidden');
+    // 폼 초기화
+    document.getElementById('menu-form').reset();
+    document.getElementById('selected-image').value = '';
+    document.getElementById('selected-image-preview').textContent = '없음 (선택해주세요)';
+    document.querySelectorAll('.food-image-option').forEach(o => o.classList.remove('selected'));
   }
 
   function openReviewModal(menuId) {
