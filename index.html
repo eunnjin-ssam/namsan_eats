@@ -30,56 +30,9 @@
       transition:filter 0.15s, transform 0.15s; line-height:1;
     }
     #notification { transition:transform 0.4s cubic-bezier(0.68,-0.55,0.265,1.55); }
-    #setup-screen {
-      position:fixed; inset:0; background:rgba(0,0,0,0.75);
-      display:flex; align-items:center; justify-content:center; z-index:100;
-    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-
-<!-- Firebase 설정 화면 -->
-<div id="setup-screen">
-  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-4">
-    <div class="text-center mb-6">
-      <div class="text-5xl mb-3">🔧</div>
-      <h2 class="text-2xl font-bold text-gray-800 mb-1">Firebase 연결 설정</h2>
-      <p class="text-gray-500 text-sm">아래 안내에 따라 설정값을 입력하세요. 한 번만 하면 됩니다!</p>
-    </div>
-
-    <details class="mb-5 bg-blue-50 rounded-xl p-4">
-      <summary class="font-semibold text-blue-700 text-sm cursor-pointer">📋 설정값 얻는 방법 (클릭해서 펼치기)</summary>
-      <ol class="mt-3 text-sm text-gray-700 space-y-2 list-decimal list-inside leading-relaxed">
-        <li><a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 underline font-medium">console.firebase.google.com</a> 접속 → 구글 계정으로 로그인</li>
-        <li><b>프로젝트 만들기</b> 클릭 → 이름 입력 (예: namsan-eats) → Google 애널리틱스 <b>사용 안함</b> 선택 → <b>프로젝트 만들기</b></li>
-        <li>왼쪽 메뉴 <b>Firestore Database</b> → <b>데이터베이스 만들기</b> → <b>테스트 모드로 시작</b> → 위치 선택(asia-northeast3 권장) → <b>완료</b></li>
-        <li>왼쪽 상단 톱니바퀴(⚙️) → <b>프로젝트 설정</b> → 아래로 스크롤 → <b>내 앱</b> 에서 <b>&lt;/&gt;</b>(웹) 클릭</li>
-        <li>앱 닉네임 입력 후 <b>앱 등록</b> → 화면에 표시된 <code class="bg-gray-200 px-1 rounded">firebaseConfig</code> 값을 아래에 복사·붙여넣기</li>
-      </ol>
-    </details>
-
-    <div class="space-y-3">
-      <div>
-        <label class="block text-xs font-bold text-gray-600 mb-1">apiKey <span class="text-red-400">*</span></label>
-        <input id="cfg-apiKey" type="text" placeholder="AIzaSy..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-gray-600 mb-1">authDomain <span class="text-red-400">*</span></label>
-        <input id="cfg-authDomain" type="text" placeholder="your-app.firebaseapp.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-gray-600 mb-1">projectId <span class="text-red-400">*</span></label>
-        <input id="cfg-projectId" type="text" placeholder="namsan-eats (프로젝트 ID)" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-      </div>
-    </div>
-    <p class="text-xs text-gray-400 mt-2">나머지 값은 자동으로 채워집니다.</p>
-
-    <button onclick="saveFirebaseConfig()" class="w-full mt-5 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors text-base">
-      ✅ 저장하고 시작하기
-    </button>
-    <p class="text-center text-xs text-gray-400 mt-3">설정값은 이 기기 브라우저에만 저장됩니다.</p>
-  </div>
-</div>
 
 <!-- 알림 팝업 -->
 <div id="notification" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 border-l-4 border-blue-400 z-50" style="transform:translateX(500px)">
@@ -94,7 +47,7 @@
   <div class="container mx-auto px-4 py-4">
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center space-x-3">
-        <i class="fas fa-motorcycle text-blue-500 text-2xl"></i>
+        <i class="fas fa-motorcycle text-2xl" style="color:#f6552f"></i>
         <h1 class="text-2xl font-bold">
           <span style="color:#935227">온기가득</span>
           <span style="color:#f6552f">nam</span><span style="color:#ffb700">san</span>
@@ -177,16 +130,13 @@
               <div class="food-image-option" data-image="🍩"><span class="text-4xl">🍩</span></div>
               <div class="food-image-option" data-image="🥞"><span class="text-4xl">🥞</span></div>
               <div class="food-image-option" data-image="🍲"><span class="text-4xl">🍲</span></div>
-              <!-- 한식 -->
               <div class="food-image-option" data-image="🍚"><span class="text-4xl">🍚</span></div>
               <div class="food-image-option" data-image="🥩"><span class="text-4xl">🥩</span></div>
               <div class="food-image-option" data-image="🍢"><span class="text-4xl">🍢</span></div>
-              <!-- 패스트푸드 -->
               <div class="food-image-option" data-image="🌭"><span class="text-4xl">🌭</span></div>
               <div class="food-image-option" data-image="🍟"><span class="text-4xl">🍟</span></div>
               <div class="food-image-option" data-image="🍗"><span class="text-4xl">🍗</span></div>
               <div class="food-image-option" data-image="🥓"><span class="text-4xl">🥓</span></div>
-              <!-- 스테이크 / 탕후루 -->
               <div class="food-image-option" data-image="🍖"><span class="text-4xl">🍖</span></div>
               <div class="food-image-option" data-image="🍡"><span class="text-4xl">🍡</span></div>
             </div>
@@ -230,7 +180,7 @@
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
       </div>
       <div class="flex space-x-3">
-        <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">등록</button>
+        <button type="submit" id="review-submit-btn" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">등록</button>
         <button type="button" onclick="closeReviewModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors">취소</button>
       </div>
     </form>
@@ -250,7 +200,7 @@
   </div>
 </div>
 
-<!-- Firebase SDK (module) -->
+<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import {
@@ -258,172 +208,144 @@
     query, orderBy, getDocs, where
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const saved = JSON.parse(localStorage.getItem('fb_cfg') || 'null');
-  if (saved) {
-    document.getElementById('setup-screen').style.display = 'none';
-    initApp(saved);
-  }
+  const app = initializeApp({
+    apiKey:        "AIzaSyCHthnRiQA-mKb1KZDmcfTfKt7oAWrht6w",
+    authDomain:    "namsan-b108c.firebaseapp.com",
+    projectId:     "namsan-b108c",
+    storageBucket: "namsan-b108c.appspot.com",
+    messagingSenderId: "",
+    appId: ""
+  });
+  const db = getFirestore(app);
 
-  window.saveFirebaseConfig = function() {
-    const apiKey     = document.getElementById('cfg-apiKey').value.trim();
-    const authDomain = document.getElementById('cfg-authDomain').value.trim();
-    const projectId  = document.getElementById('cfg-projectId').value.trim();
-    if (!apiKey || !authDomain || !projectId) {
-      alert('apiKey, authDomain, projectId 세 가지는 반드시 입력해야 해요!'); return;
+  // 실시간 메뉴 구독
+  const menusQ = query(collection(db, 'menus'), orderBy('created_at', 'desc'));
+  let firstLoad = true;
+  onSnapshot(menusQ, snapshot => {
+    const menus = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.displayMenus(menus);
+    if (!firstLoad) {
+      snapshot.docChanges().forEach(ch => {
+        if (ch.type === 'added') {
+          const m = ch.doc.data();
+          window.showNotification(`딩동! ${m.chef_name} 셰프님의 신메뉴가 등록되었습니다!`);
+          window.playNotificationSound();
+        }
+      });
     }
-    const cfg = { apiKey, authDomain, projectId,
-      storageBucket: `${projectId}.appspot.com`, messagingSenderId:'', appId:'' };
-    localStorage.setItem('fb_cfg', JSON.stringify(cfg));
-    document.getElementById('setup-screen').style.display = 'none';
-    initApp(cfg);
+    firstLoad = false;
+  }, err => {
+    document.getElementById('menu-grid').innerHTML =
+      `<div class="col-span-full text-center py-12 text-red-400">
+        <i class="fas fa-exclamation-triangle text-3xl mb-3 block"></i>
+        Firebase 연결에 실패했습니다.<br>
+        <span class="text-sm">${err.message}</span>
+      </div>`;
+  });
+
+  // 메뉴 등록
+  window.handleMenuSubmit = async function(e) {
+    e.preventDefault();
+    const image = document.getElementById('selected-image').value;
+    if (!image) { alert('요리 이미지를 선택해주세요!'); return; }
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>등록 중...';
+    try {
+      await addDoc(collection(db, 'menus'), {
+        chef_name:   document.getElementById('chef-name').value,
+        target_name: document.getElementById('target-name').value,
+        menu_name:   document.getElementById('menu-name').value,
+        ingredients: document.getElementById('ingredients').value,
+        description: document.getElementById('description').value,
+        image,
+        created_at: new Date().toISOString()
+      });
+      window.playNotificationSound();
+      window.showNotification('메뉴가 등록되었습니다! 🎉');
+      showDashboard();
+    } catch (err) {
+      alert('등록 실패!\n\n오류: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>메뉴 등록하기';
+    }
   };
 
-  function initApp(cfg) {
-    const app = initializeApp(cfg);
-    const db  = getFirestore(app);
-
-    // 실시간 메뉴 구독
-    const menusQ = query(collection(db, 'menus'), orderBy('created_at', 'desc'));
-    let firstLoad = true;
-    onSnapshot(menusQ, snapshot => {
-      const menus = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      window.displayMenus(menus);
-      if (!firstLoad) {
-        snapshot.docChanges().forEach(ch => {
-          if (ch.type === 'added') {
-            const m = ch.doc.data();
-            window.showNotification(`딩동! ${m.chef_name} 셰프님의 신메뉴가 등록되었습니다!`);
-            window.playNotificationSound();
-          }
-        });
-      }
-      firstLoad = false;
-    }, err => {
-      console.error('Firestore 연결 오류:', err);
-      document.getElementById('menu-grid').innerHTML =
-        `<div class="col-span-full text-center py-12 text-red-400">
-          <i class="fas fa-exclamation-triangle text-3xl mb-3 block"></i>
-          Firebase 연결에 실패했습니다.<br>
-          <button onclick="localStorage.removeItem('fb_cfg');location.reload()" class="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200">
-            설정 다시 하기
-          </button>
-        </div>`;
-    });
-
-    // ② 메뉴 등록 중 플래그 (onSnapshot이 화면 전환하지 않도록)
-    let isSubmitting = false;
-
-    // 메뉴 등록
-    window.handleMenuSubmit = async function(e) {
-      e.preventDefault();
-      const image = document.getElementById('selected-image').value;
-      if (!image) { alert('요리 이미지를 선택해주세요!'); return; }
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>등록 중...';
-      isSubmitting = true;
-      try {
-        await addDoc(collection(db, 'menus'), {
-          chef_name:   document.getElementById('chef-name').value,
-          target_name: document.getElementById('target-name').value,
-          menu_name:   document.getElementById('menu-name').value,
-          ingredients: document.getElementById('ingredients').value,
-          description: document.getElementById('description').value,
-          image,
-          created_at: new Date().toISOString()
-        });
-        window.playNotificationSound();
-        window.showNotification('메뉴가 등록되었습니다! 🎉');
-        showDashboard(); // 폼 초기화는 showMenuRegistration에서 처리
-      } catch (err) {
-        console.error(err);
-        alert('등록 실패! Firebase 설정을 확인해주세요.\n\n오류: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>메뉴 등록하기';
-        isSubmitting = false;
-      }
-    };
-
-    // ④ 리뷰 등록 - 버튼 비활성화로 중복 방지 및 완료 후 모달 닫기
-    window.handleReviewSubmit = async function(e) {
-      e.preventDefault();
-      if (!window._selectedRating) { alert('별점을 선택해주세요!'); return; }
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '등록 중...'; }
-      try {
-        const menuId = document.getElementById('review-menu-id').value;
-        await addDoc(collection(db, 'reviews'), {
-          menu_id:       menuId,
-          reviewer_name: document.getElementById('reviewer-name').value.trim() || '익명',
-          rating:        window._selectedRating,
-          content:       document.getElementById('review-content').value,
-          created_at:    new Date().toISOString()
-        });
-        window.playNotificationSound();
-        window.showNotification('리뷰가 등록되었습니다!');
-        closeReviewModal();
-        // ⑤ 해당 메뉴의 리뷰 개수 업데이트
-        updateReviewCount(db, menuId);
-      } catch (err) {
-        alert('리뷰 등록 실패: ' + err.message);
-      } finally {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '등록'; }
-      }
-    };
-
-    // ⑤ 리뷰 개수 실시간 업데이트
-    async function updateReviewCount(db, menuId) {
-      try {
-        const q = query(collection(db, 'reviews'), where('menu_id','==',menuId));
-        const snap = await getDocs(q);
-        const el = document.getElementById(`review-count-${menuId}`);
-        if (el) el.textContent = snap.size;
-      } catch(e) {}
+  // 리뷰 등록
+  window.handleReviewSubmit = async function(e) {
+    e.preventDefault();
+    if (!window._selectedRating) { alert('별점을 선택해주세요!'); return; }
+    const btn = document.getElementById('review-submit-btn');
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+    try {
+      const menuId = document.getElementById('review-menu-id').value;
+      await addDoc(collection(db, 'reviews'), {
+        menu_id:       menuId,
+        reviewer_name: document.getElementById('reviewer-name').value.trim() || '익명',
+        rating:        window._selectedRating,
+        content:       document.getElementById('review-content').value,
+        created_at:    new Date().toISOString()
+      });
+      window.playNotificationSound();
+      window.showNotification('리뷰가 등록되었습니다!');
+      closeReviewModal();
+      updateReviewCount(menuId);
+    } catch (err) {
+      alert('리뷰 등록 실패: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '등록';
     }
+  };
 
-    // ⑤ 페이지 로드 시 모든 메뉴의 리뷰 개수 일괄 로드
-    async function loadAllReviewCounts(db, menuIds) {
-      for (const menuId of menuIds) {
-        updateReviewCount(db, menuId);
-      }
-    }
-
-    // displayMenus에서 호출할 수 있도록 전역 등록
-    window._loadAllReviewCounts = (menuIds) => loadAllReviewCounts(db, menuIds);
-
-    // 리뷰 목록
-    window.openReviewsModal = async function(menuId, menuName) {
-      document.getElementById('reviews-modal').style.display = 'flex';
-      document.getElementById('reviews-menu-title').textContent = `📌 "${menuName}"의 리뷰`;
-      const list = document.getElementById('reviews-list');
-      list.innerHTML = '<p class="text-gray-400 text-sm text-center py-6"><i class="fas fa-spinner fa-spin mr-2"></i>불러오는 중...</p>';
-      try {
-        const q = query(collection(db, 'reviews'), where('menu_id','==',menuId), orderBy('created_at','desc'));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          list.innerHTML = '<p class="text-gray-400 text-sm text-center py-6">아직 리뷰가 없어요!<br>첫 번째 리뷰를 남겨보세요.</p>';
-          return;
-        }
-        list.innerHTML = snap.docs.map(d => {
-          const r = d.data();
-          const stars = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-          const date = r.created_at ? new Date(r.created_at).toLocaleDateString('ko-KR') : '';
-          return `<div class="border-b border-gray-100 pb-3 last:border-0">
-            <div class="flex items-center justify-between mb-1">
-              <span class="font-medium text-gray-800 text-sm">${r.reviewer_name}</span>
-              <span class="text-xs text-gray-400">${date}</span>
-            </div>
-            <div class="text-sm mb-1">${stars}</div>
-            <p class="text-sm text-gray-600">${r.content || ''}</p>
-          </div>`;
-        }).join('');
-      } catch (err) {
-        list.innerHTML = `<p class="text-red-400 text-sm text-center py-6">불러오기 실패: ${err.message}</p>`;
-      }
-    };
+  // 리뷰 개수 업데이트
+  async function updateReviewCount(menuId) {
+    try {
+      const q = query(collection(db, 'reviews'), where('menu_id','==',menuId));
+      const snap = await getDocs(q);
+      const el = document.getElementById(`review-count-${menuId}`);
+      if (el) el.textContent = snap.size;
+    } catch(e) {}
   }
 
+  window._loadAllReviewCounts = async function(menuIds) {
+    for (const id of menuIds) updateReviewCount(id);
+  };
+
+  // 리뷰 목록
+  window.openReviewsModal = async function(menuId, menuName) {
+    document.getElementById('reviews-modal').style.display = 'flex';
+    document.getElementById('reviews-menu-title').textContent = `📌 "${menuName}"의 리뷰`;
+    const list = document.getElementById('reviews-list');
+    list.innerHTML = '<p class="text-gray-400 text-sm text-center py-6"><i class="fas fa-spinner fa-spin mr-2"></i>불러오는 중...</p>';
+    try {
+      const q = query(collection(db, 'reviews'), where('menu_id','==',menuId), orderBy('created_at','desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        list.innerHTML = '<p class="text-gray-400 text-sm text-center py-6">아직 리뷰가 없어요!<br>첫 번째 리뷰를 남겨보세요.</p>';
+        return;
+      }
+      list.innerHTML = snap.docs.map(d => {
+        const r = d.data();
+        const stars = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        const date = r.created_at ? new Date(r.created_at).toLocaleDateString('ko-KR') : '';
+        return `<div class="border-b border-gray-100 pb-3 last:border-0">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-medium text-gray-800 text-sm">${r.reviewer_name}</span>
+            <span class="text-xs text-gray-400">${date}</span>
+          </div>
+          <div class="text-sm mb-1">${stars}</div>
+          <p class="text-sm text-gray-600">${r.content || ''}</p>
+        </div>`;
+      }).join('');
+    } catch (err) {
+      list.innerHTML = `<p class="text-red-400 text-sm text-center py-6">불러오기 실패: ${err.message}</p>`;
+    }
+  };
+
+  // 메뉴 카드 렌더
   window.displayMenus = function(menus) {
     const grid = document.getElementById('menu-grid');
     if (!grid) return;
@@ -463,11 +385,7 @@
           </div>
         </div>
       </div>`).join('');
-
-    // ⑤ 카드 렌더 후 리뷰 개수 로드
-    if (window._loadAllReviewCounts) {
-      window._loadAllReviewCounts(menus.map(m => m.id));
-    }
+    if (window._loadAllReviewCounts) window._loadAllReviewCounts(menus.map(m => m.id));
   };
 </script>
 
@@ -514,10 +432,10 @@
     document.getElementById('dashboard-section').classList.remove('hidden');
     document.getElementById('registration-section').classList.add('hidden');
   }
+
   function showMenuRegistration() {
     document.getElementById('dashboard-section').classList.add('hidden');
     document.getElementById('registration-section').classList.remove('hidden');
-    // 폼 초기화
     document.getElementById('menu-form').reset();
     document.getElementById('selected-image').value = '';
     document.getElementById('selected-image-preview').textContent = '없음 (선택해주세요)';
